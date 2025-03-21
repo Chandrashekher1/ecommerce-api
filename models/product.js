@@ -31,7 +31,7 @@ function validateProduct(product){
     const Schema = Joi.object({
         name: Joi.string().min(3).max(255).required(),
         price: Joi.number().min(0).max(2000).required(),
-        weight: Joi.number().max(50).required(),
+        weight: Joi.number().required(),
         description: Joi.string().required()
     })
    return Schema.validate(product);
