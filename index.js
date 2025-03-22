@@ -1,10 +1,16 @@
+const config = require('config')
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 require('dotenv').config()
 require('./startup/routes')(app)
 
-mongoose.connect(process.env.MONGODB_CONNECT_URI, {useUnifiedTopology: true,
+if(!config.get('jwtPrivateKey')) {
+    console.error('FATAL ERROR: jwtPrivateKey is not defined.')
+    process.exit(1)
+}
+
+mongoose.connect("mongodb://localhost/products", {useUnifiedTopology: true,
 
     useNewUrlParser: true,})
     .then(() => console.log('MongoDB is connected...'))
