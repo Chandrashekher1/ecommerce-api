@@ -1,3 +1,5 @@
+const admin = require('../middleware/admin')
+const auth = require('../middleware/auth')
 const {Products, validate} = require('../models/product')
 const express = require('express')
 const router = express.Router()
@@ -16,7 +18,7 @@ router.get('/:id', async (req,res) => {
 })
 
 // post 
-router.post('/', async (req,res) => {
+router.post('/', [auth,admin], async (req,res) => {
     const result = validate(req.body)
     if(result.error) {
         res.status(400).send(result.error.details[0].message)
@@ -51,7 +53,7 @@ router.put('/:id',async (req,res) => {
 })
 
 // Delete command
-router.delete('/:id', async (req,res) => {
+router.delete('/:id',[auth,admin], async (req,res) => {
     const deletedItem = await Products.findByIdAndDelete(req.params.id)
     if (!deletedItem) return res.status(404).send('The item with the given ID was not found.');
     res.send(deletedItem)
