@@ -5,7 +5,7 @@ const app = express();
 require('dotenv').config()
 require('./startup/routes')(app)
 
-if(!config.get('jwtPrivateKey')) {
+if(!process.env.shop_jwtPrivateKey) {
     console.error('FATAL ERROR: jwtPrivateKey is not defined.')
     process.exit(1)
 }
