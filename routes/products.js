@@ -10,7 +10,7 @@ router.get('/', async (req,res) => {
     res.send(product)    
 })
 
-router.get('/:id', async (req,res) => {
+router.get('/:id',auth, async (req,res) => {
     const result = await Products.findById(req.params.id)
     if(!result) return res.status(400).send("There is not any item with this id")
 
