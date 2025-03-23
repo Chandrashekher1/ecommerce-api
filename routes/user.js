@@ -1,3 +1,4 @@
+const auth = require('../middleware/auth') // for authorization
 const jwt = require('jsonwebtoken')
 const config = require('config')
 const bcrypt = require('bcrypt')
@@ -5,8 +6,12 @@ const {User,validate} = require('../models/users')
 const express = require('express')
 const router = express.Router()
 
+router.get('/me',auth, async (req,res) => {
+    const user = await User.findById(req.user._id).select('-password')
+    res.send(user)
+})
 
-router.post('/',async (req,res) => {
+router.post('/',auth, async (req,res) => {
     const {FirstName, LastName,Email, password} = req.body
     const {error} = validate(req.body)
     if(error) return res.status(400).send(error.details[0].message)
@@ -25,8 +30,7 @@ router.post('/',async (req,res) => {
     user.password = await bcrypt.hash(password,salt)
     user = await user.save()
     // if register then direct login in
-    const token = jwt.sign({_id: user._id},process.env.shop_jwtPrivateKey)
-    
+    const token = user.generateAuthToken()    
     res.header('x-auth-token',token).send(user)
 })
 
