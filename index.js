@@ -10,7 +10,7 @@ if(!process.env.shop_jwtPrivateKey) {
     process.exit(1)
 }
 
-mongoose.connect("mongodb://localhost/products", {useUnifiedTopology: true,
+mongoose.connect(process.env.MONGODB_CONNECT_URI, {useUnifiedTopology: true,
 
     useNewUrlParser: true,})
     .then(() => console.log('MongoDB is connected...'))
